@@ -26,7 +26,7 @@ const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeade
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-background/80 backdrop-blur-md border-b border-border/50"
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-background backdrop-blur-md border-b border-border/50"
         >
           {/* Left side: Hamburger (mobile) or Logo */}
           <div className="flex items-center gap-2">

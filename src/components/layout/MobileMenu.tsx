@@ -47,7 +47,7 @@ const MobileMenu = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 z-50 bg-black"
               onClick={() => setIsOpen(false)}
             />
 
@@ -73,7 +73,7 @@ const MobileMenu = () => {
               </div>
 
               {/* Menu Items */}
-              <nav className="p-4 space-y-1">
+              <nav className="p-4 space-y-1 bg-card">
                 {menuItems.map((item, index) => {
                   const isActive = location.pathname === item.path;
                   return (
@@ -97,7 +97,7 @@ const MobileMenu = () => {
               </nav>
 
               {/* Footer CTA */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
+              <div className="p-4 border-t border-border bg-card">
                 <Button
                   onClick={() => handleNavigate("/services")}
                   className="w-full btn-gold-glow bg-gold hover:bg-gold-light text-navy-900 font-semibold"
