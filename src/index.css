@@ -165,9 +165,10 @@
     @apply border-border;
   }
 
-  /* Smooth theme transitions */
   html {
     color-scheme: dark;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
   html.light {
@@ -175,25 +176,29 @@
   }
 
   /* Theme transition - smooth 400ms color morph */
-  html,
-  html *,
-  html *::before,
-  html *::after {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 400ms;
+  *,
+  *::before,
+  *::after {
+    transition: background-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                color 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                fill 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Exclude elements that shouldn't transition */
-  html button,
-  html a,
-  html input,
-  html select,
-  html textarea,
-  html [role="button"] {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+  /* Faster transitions for interactive elements */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    transition: background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   body {
