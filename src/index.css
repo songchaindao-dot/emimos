@@ -163,12 +163,21 @@
 @layer base {
   * {
     @apply border-border;
+    min-width: 0;
   }
 
   html {
     color-scheme: dark;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   html.light {
@@ -204,10 +213,19 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
+    overflow-wrap: anywhere;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 
