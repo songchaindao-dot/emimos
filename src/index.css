@@ -5,8 +5,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @layer base {
+  /* LIGHT MODE - Light backgrounds, dark text */
   :root {
-    /* EMIMOS Brand Colors */
     --background: 220 20% 97%;
     --foreground: 220 50% 12%;
 
@@ -17,7 +17,7 @@
     --popover-foreground: 220 50% 12%;
 
     /* Deep Navy Blue - Primary */
-    --primary: 220 60% 18%;
+    --primary: 220 60% 25%;
     --primary-foreground: 0 0% 100%;
 
     /* Navy variants */
@@ -33,17 +33,17 @@
     --navy-900: 220 75% 5%;
 
     /* Gold Accent */
-    --gold: 43 85% 55%;
-    --gold-light: 43 80% 70%;
-    --gold-dark: 43 90% 40%;
+    --gold: 43 85% 45%;
+    --gold-light: 43 80% 60%;
+    --gold-dark: 43 90% 35%;
 
-    --secondary: 220 20% 96%;
+    --secondary: 220 20% 92%;
     --secondary-foreground: 220 50% 12%;
 
-    --muted: 220 15% 92%;
-    --muted-foreground: 220 15% 45%;
+    --muted: 220 15% 90%;
+    --muted-foreground: 220 15% 40%;
 
-    --accent: 43 85% 55%;
+    --accent: 43 85% 45%;
     --accent-foreground: 220 60% 12%;
 
     --destructive: 0 84% 60%;
@@ -52,16 +52,16 @@
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
 
-    --border: 220 20% 88%;
-    --input: 220 20% 88%;
-    --ring: 220 60% 18%;
+    --border: 220 20% 85%;
+    --input: 220 20% 85%;
+    --ring: 220 60% 25%;
 
     --radius: 0.75rem;
 
     /* Gradients */
-    --gradient-navy: linear-gradient(135deg, hsl(220 60% 18%) 0%, hsl(220 70% 8%) 100%);
-    --gradient-navy-soft: linear-gradient(180deg, hsl(220 60% 18%) 0%, hsl(220 65% 12%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(43 85% 55%) 0%, hsl(43 90% 40%) 100%);
+    --gradient-navy: linear-gradient(135deg, hsl(220 60% 25%) 0%, hsl(220 70% 15%) 100%);
+    --gradient-navy-soft: linear-gradient(180deg, hsl(220 60% 25%) 0%, hsl(220 65% 18%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 85% 50%) 0%, hsl(43 90% 40%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 20% 98%) 100%);
 
     /* Shadows */
@@ -82,29 +82,51 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* DARK MODE - Dark backgrounds, bright text */
   .dark {
-    --background: 220 70% 5%;
-    --foreground: 210 40% 90%;
-    --card: 220 65% 8%;
-    --card-foreground: 210 40% 95%;
-    --popover: 220 65% 8%;
-    --popover-foreground: 210 40% 95%;
-    --primary: 205 85% 55%;
-    --primary-foreground: 220 60% 5%;
-    --secondary: 220 60% 15%;
-    --secondary-foreground: 210 40% 95%;
-    --muted: 220 55% 18%;
-    --muted-foreground: 220 15% 60%;
-    --accent: 205 85% 55%;
-    --accent-foreground: 220 60% 5%;
+    --background: 220 70% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 65% 7%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 65% 7%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 205 90% 60%;
+    --primary-foreground: 220 70% 4%;
+
+    --secondary: 220 55% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 50% 15%;
+    --muted-foreground: 220 20% 65%;
+
+    --accent: 205 90% 60%;
+    --accent-foreground: 220 70% 4%;
+
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 55% 20%;
-    --input: 220 55% 20%;
-    --ring: 205 85% 55%;
-    --gold: 205 85% 55%;
-    --gold-light: 205 80% 70%;
-    --gold-dark: 205 90% 40%;
+
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 220 50% 18%;
+    --input: 220 50% 18%;
+    --ring: 205 90% 60%;
+
+    --gold: 205 90% 60%;
+    --gold-light: 205 85% 75%;
+    --gold-dark: 205 95% 45%;
+
+    /* Dark mode gradients */
+    --gradient-navy: linear-gradient(135deg, hsl(220 65% 8%) 0%, hsl(220 75% 3%) 100%);
+    --gradient-navy-soft: linear-gradient(180deg, hsl(220 65% 10%) 0%, hsl(220 70% 5%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(205 90% 55%) 0%, hsl(205 95% 40%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220 65% 8%) 0%, hsl(220 60% 6%) 100%);
+
+    /* Dark mode shadows */
+    --shadow-card: 0 2px 8px 0 hsl(220 80% 2% / 0.4), 0 8px 24px 0 hsl(220 80% 2% / 0.3);
   }
 }
 
