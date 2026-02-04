@@ -6,7 +6,6 @@ const navItems = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Briefcase, label: "Services", path: "/services" },
   { icon: ClipboardList, label: "Orders", path: "/orders" },
-  { icon: User, label: "Profile", path: "/profile" },
 ];
 
 const BottomNavigation = () => {
