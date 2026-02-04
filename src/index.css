@@ -5,46 +5,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @layer base {
-  /* LIGHT MODE - Light backgrounds, dark text */
+  /* ☀️ LIGHT MODE - Clean, Professional, Corporate */
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 50% 12%;
+    --background: 0 0% 100%;
+    --foreground: 220 50% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 50% 12%;
+    --card-foreground: 220 50% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 50% 12%;
+    --popover-foreground: 220 50% 15%;
 
-    /* Deep Navy Blue - Primary */
-    --primary: 220 60% 25%;
+    /* EMIMOS Brand Blue - Primary */
+    --primary: 220 65% 30%;
     --primary-foreground: 0 0% 100%;
 
-    /* Navy variants */
-    --navy-50: 220 40% 96%;
-    --navy-100: 220 45% 90%;
-    --navy-200: 220 50% 80%;
-    --navy-300: 220 55% 65%;
-    --navy-400: 220 58% 45%;
-    --navy-500: 220 60% 30%;
-    --navy-600: 220 60% 18%;
-    --navy-700: 220 65% 12%;
-    --navy-800: 220 70% 8%;
-    --navy-900: 220 75% 5%;
+    /* Navy variants for light mode */
+    --navy-50: 220 40% 98%;
+    --navy-100: 220 45% 95%;
+    --navy-200: 220 50% 88%;
+    --navy-300: 220 55% 75%;
+    --navy-400: 220 58% 55%;
+    --navy-500: 220 60% 40%;
+    --navy-600: 220 60% 30%;
+    --navy-700: 220 65% 22%;
+    --navy-800: 220 70% 15%;
+    --navy-900: 220 75% 10%;
 
     /* Gold Accent */
-    --gold: 43 85% 45%;
-    --gold-light: 43 80% 60%;
-    --gold-dark: 43 90% 35%;
+    --gold: 43 85% 48%;
+    --gold-light: 43 80% 62%;
+    --gold-dark: 43 90% 38%;
 
-    --secondary: 220 20% 92%;
-    --secondary-foreground: 220 50% 12%;
+    --secondary: 220 15% 96%;
+    --secondary-foreground: 220 50% 15%;
 
-    --muted: 220 15% 90%;
-    --muted-foreground: 220 15% 40%;
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 43 85% 45%;
-    --accent-foreground: 220 60% 12%;
+    --accent: 220 65% 30%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -52,81 +52,111 @@
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
 
-    --border: 220 20% 85%;
-    --input: 220 20% 85%;
-    --ring: 220 60% 25%;
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 220 65% 30%;
 
     --radius: 0.75rem;
 
-    /* Gradients */
-    --gradient-navy: linear-gradient(135deg, hsl(220 60% 25%) 0%, hsl(220 70% 15%) 100%);
-    --gradient-navy-soft: linear-gradient(180deg, hsl(220 60% 25%) 0%, hsl(220 65% 18%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(43 85% 50%) 0%, hsl(43 90% 40%) 100%);
+    /* Light mode gradients */
+    --gradient-navy: linear-gradient(135deg, hsl(220 65% 30%) 0%, hsl(220 70% 22%) 100%);
+    --gradient-navy-soft: linear-gradient(180deg, hsl(220 65% 30%) 0%, hsl(220 65% 25%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 85% 52%) 0%, hsl(43 90% 42%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 20% 98%) 100%);
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(220 60% 18% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 60% 18% / 0.08), 0 2px 4px -2px hsl(220 60% 18% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(220 60% 18% / 0.1), 0 4px 6px -4px hsl(220 60% 18% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(220 60% 18% / 0.1), 0 8px 10px -6px hsl(220 60% 18% / 0.05);
-    --shadow-gold: 0 4px 14px 0 hsl(43 85% 55% / 0.35);
-    --shadow-card: 0 2px 8px 0 hsl(220 60% 18% / 0.06), 0 8px 24px 0 hsl(220 60% 18% / 0.08);
+    /* Light mode shadows - subtle and professional */
+    --shadow-sm: 0 1px 2px 0 hsl(220 60% 20% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(220 60% 20% / 0.06), 0 2px 4px -2px hsl(220 60% 20% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(220 60% 20% / 0.08), 0 4px 6px -4px hsl(220 60% 20% / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(220 60% 20% / 0.08), 0 8px 10px -6px hsl(220 60% 20% / 0.04);
+    --shadow-gold: 0 4px 14px 0 hsl(43 85% 55% / 0.25);
+    --shadow-card: 0 2px 8px 0 hsl(220 60% 20% / 0.05), 0 4px 16px 0 hsl(220 60% 20% / 0.06);
+    --shadow-glow: none;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-foreground: 220 50% 20%;
+    --sidebar-primary: 220 65% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 96%;
+    --sidebar-accent-foreground: 220 50% 20%;
+    --sidebar-border: 220 15% 90%;
+    --sidebar-ring: 220 65% 30%;
   }
 
-  /* DARK MODE - Dark backgrounds, bright text */
+  /* 🌙 DARK MODE - Premium, Luxurious, Deep EMIMOS Blue */
   .dark {
-    --background: 220 70% 4%;
-    --foreground: 210 40% 98%;
+    --background: 220 65% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 65% 7%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 60% 12%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 65% 7%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 60% 12%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 205 90% 60%;
-    --primary-foreground: 220 70% 4%;
+    /* Lighter blue for dark mode primary actions */
+    --primary: 205 85% 60%;
+    --primary-foreground: 220 65% 8%;
 
-    --secondary: 220 55% 12%;
-    --secondary-foreground: 210 40% 98%;
+    /* Navy variants for dark mode */
+    --navy-50: 220 50% 20%;
+    --navy-100: 220 55% 18%;
+    --navy-200: 220 55% 16%;
+    --navy-300: 220 60% 14%;
+    --navy-400: 220 60% 12%;
+    --navy-500: 220 62% 10%;
+    --navy-600: 220 65% 8%;
+    --navy-700: 220 68% 6%;
+    --navy-800: 220 70% 5%;
+    --navy-900: 220 75% 4%;
 
-    --muted: 220 50% 15%;
-    --muted-foreground: 220 20% 65%;
+    /* Gold accent for dark mode - more prominent */
+    --gold: 43 90% 55%;
+    --gold-light: 43 85% 70%;
+    --gold-dark: 43 95% 45%;
 
-    --accent: 205 90% 60%;
-    --accent-foreground: 220 70% 4%;
+    --secondary: 220 55% 15%;
+    --secondary-foreground: 0 0% 98%;
 
-    --destructive: 0 62% 50%;
+    --muted: 220 50% 18%;
+    --muted-foreground: 220 25% 70%;
+
+    --accent: 43 90% 55%;
+    --accent-foreground: 220 65% 8%;
+
+    --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 142 76% 45%;
+    --success: 142 76% 50%;
     --success-foreground: 0 0% 100%;
 
-    --border: 220 50% 18%;
-    --input: 220 50% 18%;
-    --ring: 205 90% 60%;
+    --border: 220 45% 20%;
+    --input: 220 45% 20%;
+    --ring: 205 85% 60%;
 
-    --gold: 205 90% 60%;
-    --gold-light: 205 85% 75%;
-    --gold-dark: 205 95% 45%;
+    /* Dark mode gradients - subtle depth */
+    --gradient-navy: linear-gradient(135deg, hsl(220 65% 10%) 0%, hsl(220 70% 6%) 100%);
+    --gradient-navy-soft: linear-gradient(180deg, hsl(220 62% 12%) 0%, hsl(220 65% 8%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 90% 55%) 0%, hsl(43 95% 45%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(220 58% 14%) 0%, hsl(220 62% 10%) 100%);
 
-    /* Dark mode gradients */
-    --gradient-navy: linear-gradient(135deg, hsl(220 65% 8%) 0%, hsl(220 75% 3%) 100%);
-    --gradient-navy-soft: linear-gradient(180deg, hsl(220 65% 10%) 0%, hsl(220 70% 5%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(205 90% 55%) 0%, hsl(205 95% 40%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220 65% 8%) 0%, hsl(220 60% 6%) 100%);
+    /* Dark mode shadows - floating, soft glow effects */
+    --shadow-sm: 0 1px 3px 0 hsl(220 80% 3% / 0.3);
+    --shadow-md: 0 4px 8px -1px hsl(220 80% 3% / 0.4), 0 2px 4px -2px hsl(220 80% 3% / 0.3);
+    --shadow-lg: 0 12px 20px -4px hsl(220 80% 3% / 0.5), 0 4px 8px -4px hsl(220 80% 3% / 0.4);
+    --shadow-xl: 0 24px 32px -6px hsl(220 80% 3% / 0.5), 0 10px 14px -6px hsl(220 80% 3% / 0.4);
+    --shadow-gold: 0 0 20px 0 hsl(43 90% 55% / 0.3), 0 4px 12px 0 hsl(43 90% 55% / 0.2);
+    --shadow-card: 0 4px 12px 0 hsl(220 80% 3% / 0.4), 0 0 1px 0 hsl(205 85% 60% / 0.1);
+    --shadow-glow: 0 0 20px 0 hsl(205 85% 60% / 0.15);
 
-    /* Dark mode shadows */
-    --shadow-card: 0 2px 8px 0 hsl(220 80% 2% / 0.4), 0 8px 24px 0 hsl(220 80% 2% / 0.3);
+    --sidebar-background: 220 62% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 205 85% 60%;
+    --sidebar-primary-foreground: 220 65% 8%;
+    --sidebar-accent: 220 55% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 45% 20%;
+    --sidebar-ring: 205 85% 60%;
   }
 }
 
@@ -135,12 +165,35 @@
     @apply border-border;
   }
 
+  /* Smooth theme transitions */
   html {
     color-scheme: dark;
   }
 
   html.light {
     color-scheme: light;
+  }
+
+  /* Theme transition - smooth 400ms color morph */
+  html,
+  html *,
+  html *::before,
+  html *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 400ms;
+  }
+
+  /* Exclude elements that shouldn't transition */
+  html button,
+  html a,
+  html input,
+  html select,
+  html textarea,
+  html [role="button"] {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 
   body {
@@ -178,6 +231,10 @@
     box-shadow: var(--shadow-gold);
   }
 
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
   .text-gradient-gold {
     background: var(--gradient-gold);
     -webkit-background-clip: text;
@@ -185,11 +242,29 @@
     background-clip: text;
   }
 
+  /* Premium glow effect for dark mode CTAs */
+  .glow-primary {
+    box-shadow: 0 0 20px 0 hsl(var(--primary) / 0.4), 0 4px 12px 0 hsl(var(--primary) / 0.3);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 24px 0 hsl(var(--gold) / 0.4), 0 4px 16px 0 hsl(var(--gold) / 0.3);
+  }
+
+  /* Dark mode floating card effect */
+  .card-floating {
+    box-shadow: var(--shadow-card);
+  }
+
+  .dark .card-floating {
+    box-shadow: var(--shadow-card), 0 0 0 1px hsl(205 85% 60% / 0.05);
+  }
+
   .shimmer {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(43 85% 55% / 0.3) 50%,
+      hsl(var(--gold) / 0.3) 50%,
       transparent 100%
     );
     background-size: 200% 100%;
@@ -222,9 +297,14 @@
   }
 
   .glass {
-    background: hsl(0 0% 100% / 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid hsl(0 0% 100% / 0.2);
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .dark .glass {
+    background: hsl(220 60% 12% / 0.85);
+    border: 1px solid hsl(205 85% 60% / 0.1);
   }
 
   .safe-bottom {
