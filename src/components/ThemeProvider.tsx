@@ -3,17 +3,26 @@ import { ReactNode } from "react";
 
 interface ThemeProviderProps {
   children: ReactNode;
+  attribute?: "class" | "data-theme";
   defaultTheme?: string;
   storageKey?: string;
   enableSystem?: boolean;
-  attribute?: string;
 }
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({ 
+  children, 
+  attribute = "class",
+  defaultTheme = "dark",
+  storageKey = "emimos-theme",
+  enableSystem = false,
+  ...props 
+}: ThemeProviderProps) {
   return (
     <NextThemesProvider
-      attribute="class"
-      enableSystem={true}
+      attribute={attribute}
+      defaultTheme={defaultTheme}
+      storageKey={storageKey}
+      enableSystem={enableSystem}
       disableTransitionOnChange={false}
       {...props}
     >
