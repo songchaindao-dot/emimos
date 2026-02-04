@@ -75,7 +75,7 @@ const HeroSlider = () => {
           >
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/5 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full blur-2xl" />
 
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-4">
@@ -85,11 +85,11 @@ const HeroSlider = () => {
                     return <IconComponent size={24} className="text-gold" />;
                   })()}
                 </div>
-                <h3 className="text-xl font-heading font-bold text-primary-foreground">
+                <h3 className="text-xl font-heading font-bold text-white">
                   {heroCards[currentIndex].title}
                 </h3>
               </div>
-              <p className="text-primary-foreground/80 text-sm leading-relaxed mb-4">
+              <p className="text-white/90 text-sm leading-relaxed mb-4">
                 {heroCards[currentIndex].description}
               </p>
             </div>

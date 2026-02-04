@@ -1,4 +1,4 @@
-import { Home, Briefcase, ClipboardList, User } from "lucide-react";
+import { Home, Briefcase, ClipboardList, Info } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -6,6 +6,7 @@ const navItems = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Briefcase, label: "Services", path: "/services" },
   { icon: ClipboardList, label: "Orders", path: "/orders" },
+  { icon: Info, label: "About", path: "/about" },
 ];
 
 const BottomNavigation = () => {
