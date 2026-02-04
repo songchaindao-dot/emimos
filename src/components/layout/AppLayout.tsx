@@ -6,6 +6,10 @@ import { useLocation } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandLogo from "@/components/BrandLogo";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useDownloadPrompt } from "@/hooks/use-download-prompt";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -18,6 +22,7 @@ const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeade
   const location = useLocation();
   const isHomePage = location.pathname === "/";
   const isMobile = useIsMobile();
+  const { shouldPrompt, dismiss, requestDownload } = useDownloadPrompt();
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,17 +35,39 @@ const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeade
         >
           {/* Left side: Hamburger (mobile) or Logo */}
           <div className="flex items-center gap-2">
-            {isMobile && <MobileMenu />}
+            {isMobile && <MobileMenu onDownload={requestDownload} />}
             {!isHomePage && !isMobile && (
               <BrandLogo size="sm" showText linkToHome />
             )}
             {isHomePage && !isMobile && <div className="w-10" />}
           </div>
           
-          {/* Theme Toggle */}
-          {showThemeToggle && <ThemeToggle />}
+          <div className="flex items-center gap-2">
+            {!isMobile && (
+              <Button variant="outline" size="sm" className="gap-2" onClick={requestDownload}>
+                <Download className="h-4 w-4" />
+                Download App
+              </Button>
+            )}
+            {showThemeToggle && <ThemeToggle />}
+          </div>
         </motion.header>
       )}
+
+      <AlertDialog open={shouldPrompt} onOpenChange={(open) => (!open ? dismiss() : undefined)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Download EmiMos?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Download the app now or continue on the web. You can install it anytime.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={dismiss}>Not Now</AlertDialogCancel>
+            <AlertDialogAction onClick={requestDownload}>Download</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       
       <AnimatePresence mode="wait">
         <motion.main

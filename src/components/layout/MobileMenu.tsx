@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Home, Briefcase, ClipboardList, Info, Phone, User } from "lucide-react";
+import { Menu, X, Home, Briefcase, ClipboardList, Info, Phone, User, Download } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/BrandLogo";
@@ -14,7 +14,11 @@ const menuItems = [
   { icon: User, label: "Profile", path: "/profile" },
 ];
 
-const MobileMenu = () => {
+interface MobileMenuProps {
+  onDownload?: () => void;
+}
+
+const MobileMenu = ({ onDownload }: MobileMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,14 +28,21 @@ const MobileMenu = () => {
     setIsOpen(false);
   };
 
+  const handleDownload = () => {
+    if (onDownload) {
+      onDownload();
+    }
+    setIsOpen(false);
+  };
+
   return (
     <>
       {/* Hamburger Button */}
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={() => setIsOpen(true)}
-        className="relative z-50"
+        className="relative z-50 bg-card/90 border-border shadow-card"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -63,9 +74,10 @@ const MobileMenu = () => {
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <BrandLogo size="sm" showText linkToHome onClick={() => setIsOpen(false)} />
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
                   onClick={() => setIsOpen(false)}
+                  className="bg-card/90 border-border"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -97,7 +109,11 @@ const MobileMenu = () => {
               </nav>
 
               {/* Footer CTA */}
-              <div className="p-4 border-t border-border bg-card">
+              <div className="p-4 border-t border-border bg-card space-y-3">
+                <Button variant="outline" className="w-full gap-2" onClick={handleDownload}>
+                  <Download className="h-4 w-4" />
+                  Download App
+                </Button>
                 <Button
                   onClick={() => handleNavigate("/services")}
                   className="w-full btn-gold-glow bg-gold hover:bg-gold-light text-navy-900 font-semibold"
