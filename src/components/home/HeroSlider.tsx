@@ -96,7 +96,7 @@ const HeroSlider = () => {
 
             <Button
               onClick={() => navigate(`/services/${heroCards[currentIndex].id}`)}
-              className="relative z-10 w-fit bg-gold hover:bg-gold-dark text-navy-900 font-semibold rounded-xl shadow-gold"
+              className="relative z-10 w-fit btn-gold-glow bg-gold hover:bg-gold-dark text-navy-900 font-semibold rounded-xl shadow-gold"
             >
               Order Now
             </Button>

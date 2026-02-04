@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSlider from "@/components/home/HeroSlider";
 import QuickActions from "@/components/home/QuickActions";
+import { Button } from "@/components/ui/button";
 import emimosLogo from "@/assets/emimos-logo.png";
 
 const Index = () => {
@@ -115,6 +118,32 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </motion.section>
+
+        {/* About Us CTA */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="px-4 mt-8 pb-4"
+        >
+          <div className="bg-gradient-to-r from-navy-700 to-navy-800 dark:from-navy-600 dark:to-navy-700 p-6 rounded-2xl text-center">
+            <h3 className="text-lg font-heading font-semibold text-white mb-2">
+              Want to know more about us?
+            </h3>
+            <p className="text-white/80 text-sm mb-4">
+              Meet the leadership and learn about our mission.
+            </p>
+            <Button
+              asChild
+              className="btn-gold-glow bg-gold hover:bg-gold-light text-navy-900 font-semibold"
+            >
+              <Link to="/about">
+                About EMIMOS
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
+            </Button>
           </div>
         </motion.section>
       </div>
