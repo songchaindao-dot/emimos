@@ -1,9 +1,11 @@
 import { ReactNode } from "react";
 import BottomNavigation from "./BottomNavigation";
+import MobileMenu from "./MobileMenu";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandLogo from "@/components/BrandLogo";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -15,22 +17,25 @@ interface AppLayoutProps {
 const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeader = true }: AppLayoutProps) => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const isMobile = useIsMobile();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Fixed Header with Logo and Theme Toggle */}
+      {/* Fixed Header with Logo, Hamburger Menu and Theme Toggle */}
       {showHeader && (
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-background/80 backdrop-blur-md border-b border-border/50"
         >
-          {/* Logo - Home Button */}
-          {!isHomePage ? (
-            <BrandLogo size="sm" showText linkToHome />
-          ) : (
-            <div className="w-10" /> 
-          )}
+          {/* Left side: Hamburger (mobile) or Logo */}
+          <div className="flex items-center gap-2">
+            {isMobile && <MobileMenu />}
+            {!isHomePage && !isMobile && (
+              <BrandLogo size="sm" showText linkToHome />
+            )}
+            {isHomePage && !isMobile && <div className="w-10" />}
+          </div>
           
           {/* Theme Toggle */}
           {showThemeToggle && <ThemeToggle />}

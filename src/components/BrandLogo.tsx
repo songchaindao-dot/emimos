@@ -6,9 +6,10 @@ interface BrandLogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   linkToHome?: boolean;
+  onClick?: () => void;
 }
 
-const BrandLogo = ({ size = "md", showText = false, linkToHome = true }: BrandLogoProps) => {
+const BrandLogo = ({ size = "md", showText = false, linkToHome = true, onClick }: BrandLogoProps) => {
   const sizeClasses = {
     sm: "w-8 h-8",
     md: "w-10 h-10",
@@ -41,7 +42,7 @@ const BrandLogo = ({ size = "md", showText = false, linkToHome = true }: BrandLo
 
   if (linkToHome) {
     return (
-      <Link to="/" aria-label="Return to Home">
+      <Link to="/" aria-label="Return to Home" onClick={onClick}>
         {content}
       </Link>
     );
