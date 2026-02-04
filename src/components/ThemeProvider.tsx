@@ -5,8 +5,19 @@ interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: string;
   storageKey?: string;
+  enableSystem?: boolean;
+  attribute?: string;
 }
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider
+      attribute="class"
+      enableSystem={true}
+      disableTransitionOnChange={false}
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }
