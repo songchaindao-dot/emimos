@@ -20,7 +20,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="dark" storageKey="emimos-theme" enableSystem={false}>
+  <ThemeProvider attribute="class" defaultTheme="light" storageKey="emimos-theme" enableSystem={false}>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
