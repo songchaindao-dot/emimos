@@ -4,6 +4,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSlider from "@/components/home/HeroSlider";
 import QuickActions from "@/components/home/QuickActions";
+import emimosLogo from "@/assets/emimos-logo.png";
 
 const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -35,13 +36,17 @@ const Index = () => {
           className="px-4 pt-4 pb-6"
         >
           <div className="flex items-center gap-3">
-            <div className="px-4 py-2 gradient-navy rounded-xl">
-              <span className="text-lg font-heading font-bold text-primary-foreground">
+            <img 
+              src={emimosLogo} 
+              alt="EMIMOS Services" 
+              className="w-12 h-12 object-contain"
+            />
+            <div className="flex flex-col">
+              <span className="text-lg font-heading font-bold text-foreground">
                 EMIMOS
               </span>
+              <span className="text-xs text-primary font-medium">Services</span>
             </div>
-            <div className="h-6 w-px bg-border" />
-            <span className="text-sm text-gold font-medium">Services</span>
           </div>
         </motion.header>
 

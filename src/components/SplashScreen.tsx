@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import emimosLogo from "@/assets/emimos-logo.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -33,37 +34,21 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       >
         {/* Shimmer overlay */}
         <motion.div
-          className="absolute inset-0 shimmer rounded-2xl"
+          className="absolute inset-0 shimmer rounded-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         />
         
-        {/* Logo container */}
-        <div className="relative bg-card/10 backdrop-blur-sm p-8 rounded-2xl border border-primary-foreground/20">
-          <motion.h1
-            className="text-4xl md:text-5xl font-heading font-bold text-primary-foreground tracking-tight"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            EMIMOS
-          </motion.h1>
-          <motion.div
-            className="h-1 bg-gold rounded-full mt-2"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
-          />
-          <motion.p
-            className="text-gold text-sm font-medium tracking-widest mt-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.4 }}
-          >
-            SERVICES
-          </motion.p>
-        </div>
+        {/* Logo Image */}
+        <motion.img
+          src={emimosLogo}
+          alt="EMIMOS Services"
+          className="w-32 h-32 md:w-40 md:h-40 object-contain"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        />
       </motion.div>
 
       {/* Tagline */}
