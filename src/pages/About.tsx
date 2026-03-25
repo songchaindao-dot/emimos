@@ -260,20 +260,20 @@ const About = () => {
                 <div className="aspect-[4/5] relative overflow-hidden bg-secondary">
                   <img
                     src={ernestPhoto}
-                    alt="Ernest Mambwe Moseni - COO"
+                    alt="Ernest Mambwe - COO"
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 <CardContent className="p-6 md:p-8">
                   <h3 className="text-2xl font-heading font-bold text-foreground mb-1">
-                    Ernest Mambwe Moseni
+                    Ernest Mambwe
                   </h3>
                   <p className="text-gold font-medium mb-1">Chief Operating Officer (COO)</p>
                   <Separator className="w-12 h-0.5 bg-gold rounded-full mb-4" />
                   <div className="space-y-3 text-muted-foreground leading-relaxed text-sm md:text-base max-h-64 overflow-y-auto pr-2">
                     <p>
-                      Ernest Mambwe Moseni is a seasoned operations and business leader with a strong background in strategic planning, operational management, and service delivery. As Chief Operating Officer at EMIMOS Services, he oversees the company's day-to-day operations, ensuring efficiency, quality, and consistency across all service lines.
+                      Ernest Mambwe is a seasoned operations and business leader with a strong background in strategic planning, operational management, and service delivery. As Chief Operating Officer at EMIMOS Services, he oversees the company's day-to-day operations, ensuring efficiency, quality, and consistency across all service lines.
                     </p>
                     <p>
                       Ernest plays a key role in aligning internal systems with the company's growth objectives, supporting teams to perform at their best while maintaining a strong client-focused approach. His experience spans leadership, coordination, and operational execution across multiple professional environments.
