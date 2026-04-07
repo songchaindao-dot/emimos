@@ -1,48 +1,52 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
 import OrderCard from "@/components/orders/OrderCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
-const mockOrders = {
-  active: [
-    {
-      id: "ord-001",
-      serviceName: "Website Development",
-      orderDate: "Jan 28, 2025",
-      status: "processing" as const,
-    },
-    {
-      id: "ord-002",
-      serviceName: "Branding & Visual Identity",
-      orderDate: "Jan 25, 2025",
-      status: "pending" as const,
-    },
-  ],
-  completed: [
-    {
-      id: "ord-003",
-      serviceName: "CV & Career Branding",
-      orderDate: "Jan 15, 2025",
-      status: "completed" as const,
-    },
-    {
-      id: "ord-004",
-      serviceName: "Professional Writing & Editing",
-      orderDate: "Jan 10, 2025",
-      status: "completed" as const,
-    },
-    {
-      id: "ord-005",
-      serviceName: "Social Media Management",
-      orderDate: "Dec 20, 2024",
-      status: "failed" as const,
-    },
-  ],
-};
+import { Button } from "@/components/ui/button";
+import { getCurrentOrderUser, getOrders, getOrdersForCurrentUser, type OrderRecord } from "@/lib/orders";
 
 const Orders = () => {
-  const [activeTab, setActiveTab] = useState("active");
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "mine");
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
+
+  useEffect(() => {
+    const syncOrders = () => {
+      setOrders(getOrders());
+    };
+
+    syncOrders();
+    window.addEventListener("focus", syncOrders);
+    window.addEventListener("storage", syncOrders);
+
+    return () => {
+      window.removeEventListener("focus", syncOrders);
+      window.removeEventListener("storage", syncOrders);
+    };
+  }, []);
+
+  const groupedOrders = useMemo(
+    () => ({
+      mine: getOrdersForCurrentUser(orders),
+      active: orders.filter((order) => order.status === "pending" || order.status === "in_progress"),
+      completed: orders.filter((order) => order.status === "completed" || order.status === "failed"),
+    }),
+    [orders],
+  );
+
+  const currentUser = useMemo(() => getCurrentOrderUser(), [orders]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("tab", value);
+      return next;
+    });
+  };
 
   return (
     <AppLayout>
@@ -62,8 +66,14 @@ const Orders = () => {
         </motion.header>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-muted rounded-xl p-1 h-12">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-muted rounded-xl p-1 h-12">
+            <TabsTrigger
+              value="mine"
+              className="rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm font-medium"
+            >
+              My Orders
+            </TabsTrigger>
             <TabsTrigger
               value="active"
               className="rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-sm font-medium"
@@ -78,27 +88,55 @@ const Orders = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="active" className="mt-4">
-            {mockOrders.active.length > 0 ? (
+          <TabsContent value="mine" className="mt-4">
+            {groupedOrders.mine.length > 0 ? (
               <div className="space-y-3">
-                {mockOrders.active.map((order, index) => (
+                {groupedOrders.mine.map((order, index) => (
                   <OrderCard key={order.id} {...order} index={index} />
                 ))}
               </div>
             ) : (
-              <EmptyState message="No active orders" />
+              <EmptyState
+                message={
+                  currentUser
+                    ? "Your tracked orders will appear here automatically."
+                    : "Place your first order and this tab will track it for you."
+                }
+                buttonLabel="Order Now"
+                onClick={() => navigate("/services")}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="active" className="mt-4">
+            {groupedOrders.active.length > 0 ? (
+              <div className="space-y-3">
+                {groupedOrders.active.map((order, index) => (
+                  <OrderCard key={order.id} {...order} index={index} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                message="No active orders right now."
+                buttonLabel="Order Now"
+                onClick={() => navigate("/services")}
+              />
             )}
           </TabsContent>
 
           <TabsContent value="completed" className="mt-4">
-            {mockOrders.completed.length > 0 ? (
+            {groupedOrders.completed.length > 0 ? (
               <div className="space-y-3">
-                {mockOrders.completed.map((order, index) => (
+                {groupedOrders.completed.map((order, index) => (
                   <OrderCard key={order.id} {...order} index={index} />
                 ))}
               </div>
             ) : (
-              <EmptyState message="No completed orders" />
+              <EmptyState
+                message="No completed orders yet."
+                buttonLabel="Order Now"
+                onClick={() => navigate("/services")}
+              />
             )}
           </TabsContent>
         </Tabs>
@@ -107,7 +145,15 @@ const Orders = () => {
   );
 };
 
-const EmptyState = ({ message }: { message: string }) => (
+const EmptyState = ({
+  message,
+  buttonLabel,
+  onClick,
+}: {
+  message: string;
+  buttonLabel: string;
+  onClick: () => void;
+}) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -116,7 +162,10 @@ const EmptyState = ({ message }: { message: string }) => (
     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
       <span className="text-2xl">📦</span>
     </div>
-    <p className="text-muted-foreground">{message}</p>
+    <p className="text-muted-foreground text-center max-w-xs">{message}</p>
+    <Button onClick={onClick} className="mt-4 rounded-xl bg-gold hover:bg-gold-dark text-navy-900">
+      {buttonLabel}
+    </Button>
   </motion.div>
 );
 

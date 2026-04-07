@@ -1,79 +1,54 @@
+import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, FileText, Clock, CheckCircle, AlertCircle, MessageCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  FileText,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  MessageCircle,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/layout/AppLayout";
-
-const mockOrderDetails: Record<string, {
-  serviceName: string;
-  orderDate: string;
-  status: "pending" | "processing" | "completed" | "failed";
-  paymentStatus: string;
-  description: string;
-  files: string[];
-  timeline: { date: string; event: string; completed: boolean }[];
-}> = {
-  "ord-001": {
-    serviceName: "Website Development",
-    orderDate: "January 28, 2025",
-    status: "processing",
-    paymentStatus: "Paid",
-    description: "Modern e-commerce website with product catalog, shopping cart, and payment integration.",
-    files: ["requirements.pdf", "logo.png"],
-    timeline: [
-      { date: "Jan 28", event: "Order placed", completed: true },
-      { date: "Jan 29", event: "Payment confirmed", completed: true },
-      { date: "Jan 30", event: "Development started", completed: true },
-      { date: "Feb 5", event: "First draft review", completed: false },
-      { date: "Feb 14", event: "Final delivery", completed: false },
-    ],
-  },
-  "ord-002": {
-    serviceName: "Branding & Visual Identity",
-    orderDate: "January 25, 2025",
-    status: "pending",
-    paymentStatus: "Paid",
-    description: "Complete brand identity package including logo, color palette, and brand guidelines.",
-    files: ["brand-brief.docx"],
-    timeline: [
-      { date: "Jan 25", event: "Order placed", completed: true },
-      { date: "Jan 26", event: "Payment confirmed", completed: true },
-      { date: "Pending", event: "Design started", completed: false },
-      { date: "Pending", event: "Concept review", completed: false },
-      { date: "Pending", event: "Final delivery", completed: false },
-    ],
-  },
-  "ord-003": {
-    serviceName: "CV & Career Branding",
-    orderDate: "January 15, 2025",
-    status: "completed",
-    paymentStatus: "Paid",
-    description: "Professional CV, cover letter, and LinkedIn profile optimization.",
-    files: ["old-cv.pdf"],
-    timeline: [
-      { date: "Jan 15", event: "Order placed", completed: true },
-      { date: "Jan 15", event: "Payment confirmed", completed: true },
-      { date: "Jan 16", event: "Review started", completed: true },
-      { date: "Jan 18", event: "First draft sent", completed: true },
-      { date: "Jan 20", event: "Final delivery", completed: true },
-    ],
-  },
-};
+import { getOrderById, getTeamEmail, updateOrderStatus } from "@/lib/orders";
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const order = mockOrderDetails[id || ""] || mockOrderDetails["ord-001"];
+  const [order, setOrder] = useState(() => getOrderById(id || ""));
+
+  const fallbackOrder = useMemo(() => getOrderById("ord-001"), []);
+  const currentOrder = order ?? fallbackOrder;
 
   const statusConfig = {
     pending: { icon: Clock, label: "Pending", className: "bg-amber-100 text-amber-700" },
-    processing: { icon: Clock, label: "Processing", className: "bg-blue-100 text-blue-700" },
+    in_progress: { icon: Loader2, label: "In Progress", className: "bg-blue-100 text-blue-700" },
     completed: { icon: CheckCircle, label: "Completed", className: "bg-green-100 text-green-700" },
     failed: { icon: AlertCircle, label: "Failed", className: "bg-red-100 text-red-700" },
   };
 
-  const config = statusConfig[order.status];
+  if (!currentOrder) {
+    return null;
+  }
+
+  const config = statusConfig[currentOrder.status];
   const StatusIcon = config.icon;
+  const nextAction =
+    currentOrder.status === "pending"
+      ? { label: "Confirm As In Progress", status: "in_progress" as const }
+      : currentOrder.status === "in_progress"
+        ? { label: "Mark As Completed", status: "completed" as const }
+        : null;
+
+  const handleStatusUpdate = () => {
+    if (!id || !nextAction) return;
+    const updatedOrder = updateOrderStatus(id, nextAction.status);
+    if (updatedOrder) {
+      setOrder(updatedOrder);
+    }
+  };
 
   return (
     <AppLayout showNav={false}>
@@ -107,19 +82,24 @@ const OrderDetail = () => {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h2 className="font-heading font-semibold text-foreground text-lg">
-                  {order.serviceName}
+                  {currentOrder.serviceName}
                 </h2>
-                <p className="text-sm text-muted-foreground">{order.orderDate}</p>
+                <p className="text-sm text-muted-foreground">{currentOrder.orderDate}</p>
               </div>
               <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${config.className}`}>
-                <StatusIcon size={14} />
+                <StatusIcon size={14} className={currentOrder.status === "in_progress" ? "animate-spin" : ""} />
                 {config.label}
               </div>
             </div>
-            <p className="text-muted-foreground text-sm">{order.description}</p>
+            <p className="text-muted-foreground text-sm">{currentOrder.description}</p>
+            <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+              <p>Reference: <span className="font-medium text-foreground">{currentOrder.reference}</span></p>
+              <p>Customer: <span className="font-medium text-foreground">{currentOrder.customerName}</span></p>
+              <p>Email: <span className="font-medium text-foreground">{currentOrder.email}</span></p>
+            </div>
           </motion.div>
 
-          {/* Payment Status */}
+          {/* Order Summary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,21 +107,42 @@ const OrderDetail = () => {
             className="bg-card p-4 rounded-2xl shadow-card border border-border mb-4"
           >
             <h3 className="font-heading font-semibold text-foreground mb-3">
-              Payment Status
+              Order Summary
             </h3>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center">
                 <CheckCircle size={20} className="text-success" />
               </div>
               <div>
-                <p className="font-medium text-foreground">{order.paymentStatus}</p>
-                <p className="text-sm text-muted-foreground">K500.00</p>
+                <p className="font-medium text-foreground capitalize">
+                  {currentOrder.status.replace("_", " ")}
+                </p>
+                <p className="text-sm text-muted-foreground">{currentOrder.paymentStatus}</p>
               </div>
             </div>
           </motion.div>
 
+          {nextAction && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-card p-4 rounded-2xl shadow-card border border-border mb-4"
+            >
+              <h3 className="font-heading font-semibold text-foreground mb-2">
+                Order Workflow
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                New requests are saved as pending until you confirm them, then move them to in progress and completed.
+              </p>
+              <Button onClick={handleStatusUpdate} className="w-full rounded-xl bg-gold hover:bg-gold-dark text-navy-900">
+                {nextAction.label}
+              </Button>
+            </motion.div>
+          )}
+
           {/* Files Submitted */}
-          {order.files.length > 0 && (
+          {currentOrder.files.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -152,7 +153,7 @@ const OrderDetail = () => {
                 Files Submitted
               </h3>
               <div className="space-y-2">
-                {order.files.map((file, index) => (
+                {currentOrder.files.map((file, index) => (
                   <div
                     key={index}
                     className="flex items-center gap-3 bg-muted p-3 rounded-xl"
@@ -176,7 +177,7 @@ const OrderDetail = () => {
               Timeline
             </h3>
             <div className="space-y-4">
-              {order.timeline.map((item, index) => (
+              {currentOrder.timeline.map((item, index) => (
                 <div key={index} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <div
@@ -184,7 +185,7 @@ const OrderDetail = () => {
                         item.completed ? "bg-gold" : "bg-muted"
                       }`}
                     />
-                    {index < order.timeline.length - 1 && (
+                    {index < currentOrder.timeline.length - 1 && (
                       <div
                         className={`w-0.5 flex-1 mt-1 ${
                           item.completed ? "bg-gold/30" : "bg-muted"
@@ -220,7 +221,7 @@ const OrderDetail = () => {
             className="w-full py-6 rounded-xl font-semibold"
           >
             <MessageCircle size={20} className="mr-2" />
-            Contact Support
+            Contact Support ({getTeamEmail()})
           </Button>
         </motion.div>
       </div>

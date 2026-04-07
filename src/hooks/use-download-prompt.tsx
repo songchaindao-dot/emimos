@@ -1,9 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { isAndroid, isIOS } from "@/lib/utils";
+import { isAndroid, isIOS, isStandalone } from "@/lib/utils";
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
 
 export const useDownloadPrompt = () => {
   const [shouldPrompt, setShouldPrompt] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
     const dismissed = localStorage.getItem("downloadPromptDismissed");
@@ -13,61 +19,78 @@ export const useDownloadPrompt = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    };
+  }, []);
+
   const dismiss = useCallback(() => {
     setShouldPrompt(false);
     localStorage.setItem("downloadPromptDismissed", "true");
   }, []);
 
-  const triggerDownload = useCallback(async (url: string, filename: string) => {
-    const response = await fetch(url, { method: "HEAD" });
-    if (!response.ok) {
-      throw new Error(`Failed to download ${filename}`);
-    }
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, []);
-
   const requestDownload = useCallback(async () => {
     setShouldPrompt(false);
     localStorage.setItem("downloadPromptDismissed", "true");
-    const confirmed = window.confirm("Allow EmiMos to download the app to your device?");
+    const confirmed = window.confirm("Install EmiMos on this device?");
     if (!confirmed) return;
 
     try {
-      if (isAndroid()) {
-        await triggerDownload("/downloads/emimos-app.apk", "emimos-app.apk");
-        toast({ title: "Downloading", description: "EmiMos Android app is downloading." });
+      if (isStandalone()) {
+        toast({
+          title: "Already installed",
+          description: "EmiMos is already available from your home screen or apps list.",
+        });
+        return;
+      }
+
+      if (installPrompt) {
+        await installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          setInstallPrompt(null);
+          toast({
+            title: "Install started",
+            description: "EmiMos is being added to your device.",
+          });
+        } else {
+          toast({
+            title: "Install canceled",
+            description: "You can install EmiMos again anytime.",
+          });
+        }
         return;
       }
 
       if (isIOS()) {
-        await triggerDownload("/downloads/emimos-app.ipa", "emimos-app.ipa");
         toast({
-          title: "Downloading",
-          description: "EmiMos iOS package is downloading. Follow the Download page for setup.",
+          title: "Add to Home Screen",
+          description: "Open Safari, tap Share, then choose Add to Home Screen.",
         });
         window.location.href = "/download";
         return;
       }
 
-      await triggerDownload("/downloads/emimos-app.apk", "emimos-app.apk");
       toast({
-        title: "Downloading",
-        description: "Downloading Android APK. For iOS, see the Download page.",
+        title: isAndroid() ? "Install unavailable here" : "Install guidance",
+        description: "Open the install guide to add EmiMos to your device.",
       });
+      window.location.href = "/download";
     } catch (error) {
       toast({
-        title: "Download unavailable",
-        description: "Could not start app download. Opening the download page instead.",
+        title: "Install unavailable",
+        description: "Could not start the app install. Opening the install guide instead.",
       });
       window.location.href = "/download";
     }
-  }, [triggerDownload]);
+  }, [installPrompt]);
 
   return { shouldPrompt, dismiss, requestDownload };
 };

@@ -1,0 +1,18 @@
+{
+  "name": "EmiMos Services",
+  "short_name": "EmiMos",
+  "description": "Professional services, orders, and support in one installable app.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f2747",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -8,8 +8,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
 import OrderForm from "./pages/OrderForm";
-import Payment from "./pages/Payment";
-import PaymentResult from "./pages/PaymentResult";
+import OrderPlaced from "./pages/OrderPlaced";
 import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail";
 import Profile from "./pages/Profile";
@@ -32,8 +31,7 @@ const App = () => (
             <Route path="/services" element={<Services />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/order" element={<OrderForm />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/payment-result" element={<PaymentResult />} />
+            <Route path="/order-placed" element={<OrderPlaced />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/orders/:id" element={<OrderDetail />} />
             <Route path="/profile" element={<Profile />} />

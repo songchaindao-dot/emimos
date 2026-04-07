@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/components/layout/AppLayout";
 import StepIndicator from "@/components/ui/StepIndicator";
+import { buildOrderEmailUrl, createOrder, getCurrentOrderUser } from "@/lib/orders";
 
 const steps = ["Customer Info", "Order Details", "Summary"];
 
@@ -28,12 +29,13 @@ const OrderForm = () => {
   const [searchParams] = useSearchParams();
   const serviceId = searchParams.get("service") || "branding";
   const serviceName = serviceNames[serviceId] || "Service";
+  const savedUser = getCurrentOrderUser();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
+    fullName: savedUser?.fullName ?? "",
+    phone: savedUser?.phone ?? "",
+    email: savedUser?.email ?? "",
     description: "",
     files: [] as File[],
     notes: "",
@@ -78,9 +80,30 @@ const OrderForm = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      // Proceed to payment
-      navigate(`/payment?service=${serviceId}`, {
-        state: { formData, serviceName },
+      const reference = `EMM-${Date.now().toString(36).toUpperCase()}`;
+      const createdOrder = createOrder({
+        serviceName,
+        formData,
+        reference,
+      });
+
+      const emailUrl = buildOrderEmailUrl(createdOrder);
+      const mailLink = document.createElement("a");
+      mailLink.href = emailUrl;
+      mailLink.rel = "noreferrer";
+      document.body.appendChild(mailLink);
+      mailLink.click();
+      document.body.removeChild(mailLink);
+
+      navigate("/order-placed", {
+        state: {
+          serviceId,
+          serviceName,
+          orderId: createdOrder.id,
+          reference: createdOrder.reference,
+          orderStatus: createdOrder.status,
+          emailNotification: "prepared",
+        },
       });
     }
   };
@@ -364,7 +387,7 @@ const OrderForm = () => {
             disabled={!canProceed()}
             className="w-full py-6 text-lg font-heading font-semibold bg-gold hover:bg-gold-dark text-navy-900 rounded-xl shadow-gold disabled:opacity-50 disabled:shadow-none"
           >
-            {currentStep === steps.length - 1 ? "Proceed to Payment" : "Continue"}
+            {currentStep === steps.length - 1 ? "Place Order" : "Continue"}
           </Button>
         </motion.div>
       </div>

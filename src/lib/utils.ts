@@ -10,3 +10,10 @@ export const isAndroid = () =>
 
 export const isIOS = () =>
   typeof navigator !== "undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+export const isStandalone = () =>
+  typeof window !== "undefined" &&
+  (window.matchMedia("(display-mode: standalone)").matches ||
+    (typeof navigator !== "undefined" &&
+      "standalone" in navigator &&
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone)));

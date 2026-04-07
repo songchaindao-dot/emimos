@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Phone, MapPin, LogOut, ChevronRight, Edit3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,14 +14,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getCurrentOrderUser, setCurrentOrderUser } from "@/lib/orders";
 
 const Profile = () => {
+  const navigate = useNavigate();
+  const savedUser = getCurrentOrderUser();
   const [isEditing, setIsEditing] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+260 97 123 4567",
+    name: savedUser?.fullName || "Guest User",
+    email: savedUser?.email || "Add your email in an order",
+    phone: savedUser?.phone || "Add your phone number",
     location: "Lusaka, Zambia",
   });
 
@@ -28,6 +32,11 @@ const Profile = () => {
 
   const handleSave = () => {
     setProfile(editData);
+    setCurrentOrderUser({
+      fullName: editData.name,
+      email: editData.email,
+      phone: editData.phone,
+    });
     setIsEditing(false);
   };
 
@@ -117,7 +126,7 @@ const Profile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() => {}}
+          onClick={() => navigate("/orders?tab=mine")}
           className="w-full flex items-center gap-4 p-4 bg-card rounded-2xl shadow-card border border-border mb-6"
         >
           <div className="p-2 bg-gold/10 rounded-xl">

@@ -112,7 +112,7 @@ const MobileMenu = ({ onDownload }: MobileMenuProps) => {
               <div className="p-4 border-t border-border bg-card space-y-3">
                 <Button variant="outline" className="w-full gap-2" onClick={handleDownload}>
                   <Download className="h-4 w-4" />
-                  Download App
+                  Install App
                 </Button>
                 <Button
                   onClick={() => handleNavigate("/services")}

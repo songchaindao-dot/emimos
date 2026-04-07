@@ -46,7 +46,7 @@ const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeade
             {!isMobile && (
               <Button variant="outline" size="sm" className="gap-2" onClick={requestDownload}>
                 <Download className="h-4 w-4" />
-                Download App
+                Install App
               </Button>
             )}
             {showThemeToggle && <ThemeToggle />}
@@ -57,14 +57,14 @@ const AppLayout = ({ children, showNav = true, showThemeToggle = true, showHeade
       <AlertDialog open={shouldPrompt} onOpenChange={(open) => (!open ? dismiss() : undefined)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Download EmiMos?</AlertDialogTitle>
+            <AlertDialogTitle>Install EmiMos?</AlertDialogTitle>
             <AlertDialogDescription>
-              Download the app now or continue on the web. You can install it anytime.
+              Add EmiMos to your home screen or desktop for a full app-like experience.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={dismiss}>Not Now</AlertDialogCancel>
-            <AlertDialogAction onClick={requestDownload}>Download</AlertDialogAction>
+            <AlertDialogAction onClick={requestDownload}>Install</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

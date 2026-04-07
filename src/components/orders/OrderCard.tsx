@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { ChevronRight, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import type { OrderStatus } from "@/lib/orders";
 
 interface OrderCardProps {
   id: string;
   serviceName: string;
   orderDate: string;
-  status: "pending" | "processing" | "completed" | "failed";
+  status: OrderStatus;
   index: number;
 }
 
@@ -16,9 +17,9 @@ const statusConfig = {
     label: "Pending",
     className: "bg-amber-100 text-amber-700",
   },
-  processing: {
+  in_progress: {
     icon: Loader2,
-    label: "Processing",
+    label: "In Progress",
     className: "bg-blue-100 text-blue-700",
   },
   completed: {
@@ -56,7 +57,7 @@ const OrderCard = ({ id, serviceName, orderDate, status, index }: OrderCardProps
         </p>
       </div>
       <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${config.className}`}>
-        <StatusIcon size={14} className={status === "processing" ? "animate-spin" : ""} />
+        <StatusIcon size={14} className={status === "in_progress" ? "animate-spin" : ""} />
         {config.label}
       </div>
       <ChevronRight size={20} className="text-muted-foreground shrink-0" />
