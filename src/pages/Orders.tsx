@@ -6,6 +6,8 @@ import OrderCard from "@/components/orders/OrderCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { getCurrentOrderUser, getOrders, getOrdersForCurrentUser, type OrderRecord } from "@/lib/orders";
+import ernestPhoto from "@/assets/ernest-moseni.png";
+import ImageHero from "@/components/ui/ImageHero";
 
 const Orders = () => {
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ const Orders = () => {
     [orders],
   );
 
-  const currentUser = useMemo(() => getCurrentOrderUser(), [orders]);
+  const currentUser = getCurrentOrderUser();
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -57,12 +59,13 @@ const Orders = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-heading font-bold text-foreground">
-            My Orders
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Track your service orders
-          </p>
+          <ImageHero
+            imageSrc={ernestPhoto}
+            imageAlt="Order tracking support"
+            title="My Orders"
+            subtitle="Track progress, review updates, and manage your open and completed requests."
+            minHeightClass="min-h-[240px]"
+          />
         </motion.header>
 
         {/* Tabs */}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/components/layout/AppLayout";
+import ImageHero from "@/components/ui/ImageHero";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getCurrentOrderUser, setCurrentOrderUser } from "@/lib/orders";
+import ernestPhoto from "@/assets/ernest-moseni.png";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -49,51 +51,32 @@ const Profile = () => {
   return (
     <AppLayout>
       <div className="safe-top px-4 pt-4">
-        {/* Header */}
-        <motion.header
+        {/* Hero */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-heading font-bold text-foreground">
-            Profile
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your account
-          </p>
-        </motion.header>
-
-        {/* Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-navy-600 to-navy-800 rounded-2xl p-6 mb-6"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center">
-              <User size={32} className="text-gold" />
-            </div>
-            <div>
-              <h2 className="text-xl font-heading font-bold text-primary-foreground">
-                {profile.name}
-              </h2>
-              <p className="text-primary-foreground/70 text-sm">
-                Premium Member
-              </p>
-            </div>
-          </div>
-          <Button
-            onClick={() => {
-              setEditData(profile);
-              setIsEditing(true);
-            }}
-            variant="outline"
-            className="w-full mt-4 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20 rounded-xl"
-          >
-            <Edit3 size={16} className="mr-2" />
-            Edit Profile
-          </Button>
+          <ImageHero
+            imageSrc={ernestPhoto}
+            imageAlt="Profile area"
+            title={`Welcome, ${profile.name}`}
+            subtitle="Manage your account details and keep your order journey connected."
+            minHeightClass="min-h-[240px]"
+            actions={
+              <Button
+                onClick={() => {
+                  setEditData(profile);
+                  setIsEditing(true);
+                }}
+                variant="outline"
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20 rounded-xl"
+              >
+                <Edit3 size={16} className="mr-2" />
+                Edit Profile
+              </Button>
+            }
+          />
         </motion.div>
 
         {/* Profile Info */}

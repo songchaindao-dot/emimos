@@ -17,7 +17,9 @@ import { Input } from "@/components/ui/input";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   EMI_DIAGNOSIS_KEY,
+  EMI_FIRST_CHAT_AT_KEY,
   EMI_HINT_KEY,
+  EMI_MEMORY_TTL_MS,
   EMI_STORAGE_KEY,
   createEmiMessage,
   createUserMessage,
@@ -33,6 +35,8 @@ import {
   type EmiMessage,
   type EmiMode,
 } from "@/lib/emi";
+import { downloadDiagnosisPdf } from "@/lib/diagnosis-pdf";
+import { trackEvent } from "@/lib/analytics";
 
 interface PendingRouteFollowUp {
   path: string;
@@ -43,6 +47,12 @@ interface PendingRouteFollowUp {
 interface StoredEmiState {
   messages: EmiMessage[];
   diagnosisUsed: boolean;
+}
+
+interface EmiMemoryContext {
+  goal?: string;
+  selectedService?: string;
+  currentStep?: string;
 }
 
 const defaultDraft = (): DiagnosisDraft => ({
@@ -95,6 +105,7 @@ const EmiAssistant = () => {
   const messageViewportRef = useRef<HTMLDivElement | null>(null);
   const lastNonEmiPathRef = useRef("/");
   const pendingModeAfterRouteRef = useRef<EmiMode | null>(null);
+  const lastSectorPromptRef = useRef<string | null>(null);
 
   const storedState = useMemo(() => parseStoredState(), []);
 
@@ -112,6 +123,15 @@ const EmiAssistant = () => {
   const [diagnosisStep, setDiagnosisStep] = useState<number | null>(null);
   const [diagnosisDraft, setDiagnosisDraft] = useState<DiagnosisDraft>(defaultDraft());
   const [pendingRoute, setPendingRoute] = useState<PendingRouteFollowUp | null>(null);
+  const [isEmiTyping, setIsEmiTyping] = useState(false);
+  const [memoryContext, setMemoryContext] = useState<EmiMemoryContext>({});
+  const [lastDiagnosisSnapshot, setLastDiagnosisSnapshot] = useState<{
+    businessName: string;
+    overview: string;
+    quickWins: string[];
+    watchouts: string[];
+    threeStepPlan: string[];
+  } | null>(null);
 
   const visibleMode = location.pathname === "/emi" ? "full" : mode;
 
@@ -128,6 +148,24 @@ const EmiAssistant = () => {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
+    const firstChatAt = localStorage.getItem(EMI_FIRST_CHAT_AT_KEY);
+    if (!firstChatAt) return;
+
+    const age = Date.now() - Number(firstChatAt);
+    if (Number.isFinite(age) && age > EMI_MEMORY_TTL_MS) {
+      setMessages(initialEmiMessages());
+      setDiagnosisUsed(false);
+      setDiagnosisStep(null);
+      setDiagnosisDraft(defaultDraft());
+      setMemoryContext({});
+      setLastDiagnosisSnapshot(null);
+      localStorage.removeItem(EMI_STORAGE_KEY);
+      localStorage.removeItem(EMI_DIAGNOSIS_KEY);
+      localStorage.removeItem(EMI_FIRST_CHAT_AT_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem(
       EMI_STORAGE_KEY,
       JSON.stringify({
@@ -137,6 +175,12 @@ const EmiAssistant = () => {
     );
     localStorage.setItem(EMI_DIAGNOSIS_KEY, diagnosisUsed ? "true" : "false");
   }, [messages, diagnosisUsed]);
+
+  useEffect(() => {
+    if (diagnosisStep !== null) {
+      setMemoryContext((current) => ({ ...current, currentStep: "Diagnosis in progress" }));
+    }
+  }, [diagnosisStep]);
 
   useEffect(() => {
     if (!messageViewportRef.current) return;
@@ -159,6 +203,47 @@ const EmiAssistant = () => {
     }
   }, [isMobile, location.pathname, pendingRoute]);
 
+  useEffect(() => {
+    if (location.pathname !== "/emi") return;
+
+    const searchParams = new URLSearchParams(location.search);
+    const sector = searchParams.get("sector")?.trim();
+    if (!sector) return;
+    if (lastSectorPromptRef.current === location.search) return;
+    lastSectorPromptRef.current = location.search;
+
+    const lowerSector = sector.toLowerCase();
+    const article = /^[aeiou]/.test(lowerSector) ? "an" : "a";
+    const userIntro =
+      lowerSector === "ngos"
+        ? "Hi, I am an NGO."
+        : `Hi, I am ${article} ${sector}.`;
+
+    const warmSectorLine =
+      lowerSector === "corporate"
+        ? "Great to meet you. Corporate teams often need clear timelines, governance-ready communication, and measurable outcomes."
+        : lowerSector === "smes"
+          ? "Great to meet you. SMEs usually benefit from focused, budget-aware moves that create visible momentum quickly."
+          : lowerSector === "retail"
+            ? "Great to meet you. Retail teams often need stronger offer messaging, better visibility, and conversion-focused execution."
+            : lowerSector === "ngos"
+              ? "Great to meet you. NGOs often need trust-led storytelling, donor-friendly communication, and clear impact visibility."
+              : lowerSector === "events"
+                ? "Great to meet you. Event teams usually need fast campaign execution, strong visuals, and on-time delivery."
+                : "Great to meet you. Professional service teams often need premium positioning, authority-building content, and reliable lead flow.";
+
+    const emiReply = `${warmSectorLine} Share a little more detail about your current goal, audience, and biggest challenge, and I will map your best next step.`;
+
+    setMessages((current) => [
+      ...current,
+      createUserMessage(userIntro),
+      createEmiMessage(emiReply, [
+        { label: "Share my goal", type: "message", value: "My goal is to get more quality enquiries this quarter." },
+        { label: "Find the right service", type: "message", value: "Help me choose the right service for my sector." },
+      ]),
+    ]);
+  }, [location.pathname, location.search]);
+
   const pushMessage = (message: EmiMessage) => {
     setMessages((current) => [...current, message]);
   };
@@ -176,6 +261,7 @@ const EmiAssistant = () => {
     setMode(isMobile ? "full" : "side");
     setShowHint(false);
     localStorage.setItem(EMI_HINT_KEY, "true");
+    trackEvent("emi_opened");
   };
 
   const dismissHint = () => {
@@ -236,6 +322,7 @@ const EmiAssistant = () => {
 
     setDiagnosisDraft(defaultDraft());
     setDiagnosisStep(0);
+    setMemoryContext((current) => ({ ...current, currentStep: "Diagnosis" }));
     const firstQuestion = diagnosisQuestions[0];
     pushEmi(
       "Wonderful. I’ll keep this focused and practical. Let’s start with the basics.",
@@ -263,6 +350,23 @@ const EmiAssistant = () => {
     setDiagnosisStep(null);
     setDiagnosisUsed(true);
     const result = generateDiagnosis(nextDraft);
+    setMemoryContext((current) => ({
+      ...current,
+      goal: nextDraft.goal,
+      selectedService: result.recommendedService.title,
+      currentStep: "Diagnosis completed",
+    }));
+    setLastDiagnosisSnapshot({
+      businessName: nextDraft.businessName,
+      overview: result.overview,
+      quickWins: result.quickWins,
+      watchouts: result.watchouts,
+      threeStepPlan: result.threeStepPlan,
+    });
+    trackEvent("emi_diagnosis_completed", {
+      business: nextDraft.businessName,
+      service: result.recommendedService.id,
+    });
 
     pushEmi(result.overview);
     pushEmi(
@@ -309,6 +413,33 @@ const EmiAssistant = () => {
         url: link.url,
       })),
     );
+
+    pushEmi(
+      [
+        "Here is your plan in 3 clear steps:",
+        ...result.threeStepPlan.map((step, index) => `${index + 1}. ${step}`),
+      ].join("\n"),
+      [
+        { label: "Download Diagnosis PDF", type: "download_diagnosis" },
+        {
+          label: "Prepare my order brief",
+          type: "message",
+          value: `Prepare my order brief for ${result.recommendedService.title}`,
+        },
+      ],
+    );
+
+    pushEmi(
+      "Would you like me to prepare your order brief now so you can submit faster?",
+      [
+        {
+          label: "Yes, prepare brief",
+          type: "message",
+          value: `Prepare my order brief for ${result.recommendedService.title}`,
+        },
+        { label: "Start order now", type: "order", serviceId: result.recommendedService.id },
+      ],
+    );
   };
 
   const handleAction = (action: EmiAction) => {
@@ -338,6 +469,24 @@ const EmiAssistant = () => {
       return;
     }
 
+    if (action.type === "download_diagnosis") {
+      pushMessage(createUserMessage(action.label));
+      if (!lastDiagnosisSnapshot) {
+        pushEmi("I do not have a diagnosis report yet. Run your complimentary diagnosis first.");
+        return;
+      }
+      downloadDiagnosisPdf("EMIMOS Business Diagnosis", [
+        { heading: "Business", lines: [lastDiagnosisSnapshot.businessName] },
+        { heading: "Overview", lines: [lastDiagnosisSnapshot.overview] },
+        { heading: "Quick Wins", lines: lastDiagnosisSnapshot.quickWins },
+        { heading: "Watchouts", lines: lastDiagnosisSnapshot.watchouts },
+        { heading: "3-Step Plan", lines: lastDiagnosisSnapshot.threeStepPlan },
+      ]);
+      trackEvent("emi_diagnosis_pdf_downloaded");
+      pushEmi("Your diagnosis PDF has been prepared and downloaded.");
+      return;
+    }
+
     pushMessage(createUserMessage(action.label));
     navigate(`/order?service=${action.serviceId}`);
     setPendingRoute({
@@ -359,6 +508,21 @@ const EmiAssistant = () => {
     }
 
     const normalized = trimmed.toLowerCase();
+
+    if (
+      normalized.includes("prepare my order brief") ||
+      normalized.includes("order brief")
+    ) {
+      const selectedService = memoryContext.selectedService ?? "the recommended service";
+      pushEmi(
+        `Perfect. Here is your brief draft:\n1. Goal: ${memoryContext.goal ?? "Growth and visibility"}\n2. Service: ${selectedService}\n3. Priority: Quick, measurable outcomes\n4. Delivery preference: Professional and conversion-focused.\n\nI can take you straight to order submission now.`,
+        [
+          { label: "Start order now", type: "navigate", path: "/services", followUp: getRouteFollowUp("/services"), match: "prefix" },
+          { label: "Book consultancy", type: "navigate", path: "/contact", followUp: getRouteFollowUp("/contact"), match: "prefix" },
+        ],
+      );
+      return;
+    }
 
     if (
       normalized.includes("diagnosis") ||
@@ -553,6 +717,11 @@ const EmiAssistant = () => {
 
     const matchedService = findServiceFromText(normalized);
     if (matchedService) {
+      setMemoryContext((current) => ({
+        ...current,
+        selectedService: matchedService.title,
+        currentStep: "Service match",
+      }));
       pushEmi(
         `${matchedService.title} sounds like the closest fit for what you described. ${matchedService.summary}`,
         [
@@ -609,9 +778,17 @@ const EmiAssistant = () => {
   const sendCurrentInput = () => {
     const text = draftInput.trim();
     if (!text) return;
+    if (!localStorage.getItem(EMI_FIRST_CHAT_AT_KEY)) {
+      localStorage.setItem(EMI_FIRST_CHAT_AT_KEY, Date.now().toString());
+    }
+    trackEvent("emi_message_sent");
     pushMessage(createUserMessage(text));
     setDraftInput("");
-    processUserInput(text);
+    setIsEmiTyping(true);
+    setTimeout(() => {
+      setIsEmiTyping(false);
+      processUserInput(text);
+    }, 520);
   };
 
   const currentDiagnosisPrompt =
@@ -663,10 +840,11 @@ const EmiAssistant = () => {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={openAssistant}
-          className="fixed z-[70] right-4 bottom-28 sm:bottom-6 rounded-full bg-gold text-navy-900 shadow-gold h-14 px-5 flex items-center gap-3 font-semibold"
+          className="fixed z-[70] right-3 bottom-[calc(5.6rem+env(safe-area-inset-bottom))] sm:right-4 sm:bottom-5 rounded-full bg-gold text-navy-900 shadow-gold h-11 px-3 sm:px-4 flex items-center gap-2 font-semibold text-sm"
+          aria-label="Open Emi chat"
         >
-          <MessageCircle size={20} />
-          <span className="hidden sm:inline">Chat with Emi</span>
+          <MessageCircle size={18} />
+          <span className="hidden md:inline">Chat with Emi</span>
         </motion.button>
       )}
 
@@ -684,7 +862,7 @@ const EmiAssistant = () => {
             className={
               visibleMode === "full"
                 ? "fixed inset-0 z-[80] bg-background/95 backdrop-blur-sm"
-                : "fixed z-[80] right-3 bottom-24 w-[min(88vw,340px)] h-[56vh] max-h-[460px] sm:right-4 sm:bottom-6 sm:w-[360px] sm:h-[68vh] sm:max-h-[560px]"
+                : "fixed z-[80] right-3 bottom-[calc(5.6rem+env(safe-area-inset-bottom))] w-[min(88vw,340px)] h-[56vh] max-h-[460px] sm:right-4 sm:bottom-6 sm:w-[360px] sm:h-[68vh] sm:max-h-[560px]"
             }
           >
             <div
@@ -757,6 +935,25 @@ const EmiAssistant = () => {
                     </button>
                   </div>
                 )}
+                {visibleMode === "full" && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {memoryContext.goal && (
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-xs">
+                        Goal: {memoryContext.goal}
+                      </span>
+                    )}
+                    {memoryContext.selectedService && (
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-xs">
+                        Service: {memoryContext.selectedService}
+                      </span>
+                    )}
+                    {memoryContext.currentStep && (
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-xs">
+                        Step: {memoryContext.currentStep}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div
@@ -799,6 +996,13 @@ const EmiAssistant = () => {
                       </div>
                     </div>
                   ))}
+                  {isEmiTyping && (
+                    <div className="flex justify-start">
+                      <div className="max-w-[88%] rounded-2xl px-4 py-3 shadow-sm bg-card border border-border text-foreground">
+                        <p className="text-sm text-muted-foreground">Emi is typing...</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

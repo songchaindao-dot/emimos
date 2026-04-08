@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
 import ServiceCard from "@/components/services/ServiceCard";
+import { Button } from "@/components/ui/button";
+import ImageHero from "@/components/ui/ImageHero";
+import PremiumCTA from "@/components/ui/PremiumCTA";
+import SectionDivider from "@/components/ui/SectionDivider";
 import {
   Palette,
   FileText,
@@ -12,6 +17,9 @@ import {
   Smartphone,
   Server,
 } from "lucide-react";
+import image4 from "@/assets/image 4.jpg";
+import emimosLogo from "@/assets/emimos-logo.png";
+import { IMAGE_FOCAL } from "@/lib/visuals";
 
 const services = [
   {
@@ -83,18 +91,35 @@ const Services = () => {
   return (
     <AppLayout>
       <div className="safe-top px-4 pt-4">
-        {/* Header */}
+        {/* Hero Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-heading font-bold text-foreground">
-            Our Services
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Premium solutions for your business
-          </p>
+          <ImageHero
+            imageSrc={image4}
+            imageAlt="EMIMOS services"
+            title="Our Services"
+            subtitle="Premium business solutions, clearly packaged and ready for execution."
+            imagePositionClass={IMAGE_FOCAL.heroPrimary}
+            badge={
+              <div className="flex items-center gap-2">
+                <img src={emimosLogo} alt="EMIMOS" className="w-9 h-9 rounded-lg bg-white/90 p-1" />
+                <span className="text-white/90 text-sm font-medium">Service Catalogue</span>
+              </div>
+            }
+            actions={
+              <>
+                <Button asChild className="bg-gold hover:bg-gold-dark text-navy-900 font-semibold">
+                  <Link to="/order?service=branding">Start Order</Link>
+                </Button>
+                <Button asChild variant="ghost" className="border border-white/50 bg-white/10 text-white hover:bg-white/20">
+                  <Link to="/emi">Ask Emi</Link>
+                </Button>
+              </>
+            }
+          />
         </motion.header>
 
         {/* Services Grid */}
@@ -103,7 +128,27 @@ const Services = () => {
             <ServiceCard key={service.id} {...service} index={index} />
           ))}
         </div>
+        <SectionDivider />
+        <div className="pb-3">
+          <h2 className="text-h3 text-foreground mb-3">Package Tiers</h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { tier: "Starter", text: "For focused essentials and quick launch needs." },
+              { tier: "Growth", text: "For scaling brands with multi-channel delivery." },
+              { tier: "Premium", text: "For high-touch strategic support and execution." },
+            ].map((item) => (
+              <div key={item.tier} className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-4 shadow-card">
+                <p className="text-h3 text-foreground">{item.tier}</p>
+                <p className="text-small text-muted-foreground mt-2">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+      <PremiumCTA
+        title="Need Help Choosing?"
+        subtitle="Use Emi for guided service matching, then submit your order with confidence."
+      />
     </AppLayout>
   );
 };

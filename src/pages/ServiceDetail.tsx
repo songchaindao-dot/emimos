@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Check, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/layout/AppLayout";
+import PremiumCTA from "@/components/ui/PremiumCTA";
+import { trackEvent } from "@/lib/analytics";
 import {
   Accordion,
   AccordionContent,
@@ -155,6 +157,21 @@ const servicesData: Record<string, {
   },
 };
 
+const serviceTiers = [
+  {
+    name: "Starter",
+    description: "Core deliverables to launch quickly with professional quality.",
+  },
+  {
+    name: "Growth",
+    description: "Extended execution for scaling visibility and outcomes.",
+  },
+  {
+    name: "Premium",
+    description: "Strategic full-scope delivery with highest priority support.",
+  },
+];
+
 const ServiceDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -267,6 +284,30 @@ const ServiceDetail = () => {
               )}
             </Accordion>
           </motion.div>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="mt-6"
+          >
+            <h3 className="font-heading font-semibold text-foreground mb-3">
+              Package Tiers
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {serviceTiers.map((tier) => (
+                <div key={tier.name} className="rounded-2xl border border-border bg-card/85 backdrop-blur-sm p-4 shadow-card">
+                  <p className="font-heading font-semibold text-foreground">{tier.name}</p>
+                  <p className="text-sm text-muted-foreground mt-2">{tier.description}</p>
+                </div>
+              ))}
+            </div>
+          </motion.section>
+
+          <PremiumCTA
+            title="Ready To Proceed?"
+            subtitle="Book consultancy for tailored scope, or proceed directly with your service order."
+          />
         </div>
 
         {/* Sticky CTA */}
@@ -277,7 +318,10 @@ const ServiceDetail = () => {
           className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 safe-bottom"
         >
           <Button
-            onClick={() => navigate(`/order?service=${id}`)}
+            onClick={() => {
+              trackEvent("order_started", { serviceId: id });
+              navigate(`/order?service=${id}`);
+            }}
             className="w-full py-6 text-lg font-heading font-semibold bg-gold hover:bg-gold-dark text-navy-900 rounded-xl shadow-gold"
           >
             Proceed to Order

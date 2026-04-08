@@ -22,6 +22,10 @@ export type EmiAction =
       label: string;
       type: "order";
       serviceId: string;
+    }
+  | {
+      label: string;
+      type: "download_diagnosis";
     };
 
 export interface EmiMessage {
@@ -57,11 +61,14 @@ export interface EmiDiagnosisResult {
   watchouts: string[];
   recommendedService: EmiService;
   researchLinks: Array<{ label: string; url: string }>;
+  threeStepPlan: string[];
 }
 
 export const EMI_STORAGE_KEY = "emimos-emi-chat";
 export const EMI_DIAGNOSIS_KEY = "emimos-emi-free-diagnosis-used";
 export const EMI_HINT_KEY = "emimos-emi-hint-dismissed";
+export const EMI_FIRST_CHAT_AT_KEY = "emimos-emi-first-chat-at";
+export const EMI_MEMORY_TTL_MS = 24 * 60 * 60 * 1000;
 
 export const emiServices: EmiService[] = [
   {
@@ -347,11 +354,18 @@ export const generateDiagnosis = (draft: DiagnosisDraft): EmiDiagnosisResult => 
     },
   ];
 
+  const threeStepPlan = [
+    `Refine your offer for ${draft.audience} in ${draft.location} with one clear value statement.`,
+    `Execute quick wins for ${draft.goal.toLowerCase()} with weekly tracking and visible checkpoints.`,
+    `Start ${recommendedService.title.toLowerCase()} implementation to convert strategy into outcomes.`,
+  ];
+
   return {
     overview,
     quickWins,
     watchouts,
     recommendedService,
     researchLinks,
+    threeStepPlan,
   };
 };

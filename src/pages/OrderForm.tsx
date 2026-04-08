@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import AppLayout from "@/components/layout/AppLayout";
 import StepIndicator from "@/components/ui/StepIndicator";
 import { buildOrderEmailUrl, createOrder, getCurrentOrderUser } from "@/lib/orders";
+import { trackEvent } from "@/lib/analytics";
 
 const steps = ["Customer Info", "Order Details", "Summary"];
 
@@ -85,6 +86,10 @@ const OrderForm = () => {
         serviceName,
         formData,
         reference,
+      });
+      trackEvent("order_submitted", {
+        serviceId,
+        orderId: createdOrder.id,
       });
 
       const emailUrl = buildOrderEmailUrl(createdOrder);

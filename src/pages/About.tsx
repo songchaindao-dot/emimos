@@ -5,9 +5,11 @@ import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import BrandLogo from "@/components/BrandLogo";
+import ImageHero from "@/components/ui/ImageHero";
+import image5 from "@/assets/image 5.jpg";
 import emilyPhoto from "@/assets/emily-moseni.png";
 import ernestPhoto from "@/assets/ernest-moseni.png";
+import { IMAGE_FOCAL } from "@/lib/visuals";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -53,55 +55,36 @@ const whyChooseUs = [
   "Reliable support and communication"
 ];
 
+const aboutQuickLinks = [
+  { icon: Award, label: "Our Values", target: "#our-values" },
+  { icon: Lightbulb, label: "How We Work", target: "#who-we-are" },
+  { icon: Users, label: "Leadership", target: "#our-leadership" },
+  { icon: Heart, label: "Why EMIMOS", target: "#why-emimos" },
+];
+
 const About = () => {
   return (
     <AppLayout>
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex flex-col items-center justify-center gradient-navy px-4 py-20 overflow-hidden">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, hsl(var(--gold) / 0.3) 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, hsl(var(--primary) / 0.2) 0%, transparent 50%)`
-          }} />
-        </div>
-
+      <section className="px-4 pt-20 pb-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
         >
-          <BrandLogo size="lg" showText={false} linkToHome={false} />
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white text-center mb-4"
-        >
-          About EMIMOS Services
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="h-1 w-32 mx-auto mt-4 rounded-full bg-gradient-to-r from-gold to-gold-light"
+          <ImageHero
+            imageSrc={image5}
+            imageAlt="About EMIMOS Services"
+            title="About EMIMOS Services"
+            subtitle="A professional services company built on excellence, innovation, and trust."
+            minHeightClass="min-h-[360px]"
+            imagePositionClass={IMAGE_FOCAL.heroPrimary}
           />
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-lg md:text-xl text-white/90 text-center max-w-2xl"
-        >
-          A professional services company built on excellence, innovation, and trust.
-        </motion.p>
+        </motion.div>
       </section>
 
       {/* Company Story Section */}
-      <section className="py-20 px-4 bg-background">
+      <section id="who-we-are" className="py-20 px-4 bg-background scroll-mt-24">
         <div className="container max-w-6xl mx-auto">
           <motion.div
             variants={staggerContainer}
@@ -127,18 +110,26 @@ const About = () => {
               variants={fadeInUp}
               className="relative"
             >
-              <div className="aspect-square rounded-3xl gradient-navy-soft p-8 flex items-center justify-center">
+              <div className="aspect-square rounded-3xl gradient-navy-soft p-8 flex flex-col items-center justify-center">
                 <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
-                  {[Award, Lightbulb, Users, Heart].map((Icon, index) => (
+                  {aboutQuickLinks.map((item, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, scale: 0.5 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.1 + 0.3, duration: 0.4 }}
                       viewport={{ once: true }}
-                      className="aspect-square rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-sm"
+                      className="aspect-square rounded-2xl bg-white/10 backdrop-blur-sm"
                     >
-                      <Icon className="w-10 h-10 text-gold" />
+                      <a
+                        href={item.target}
+                        className="h-full w-full flex flex-col items-center justify-center text-center p-2 hover:bg-white/10 rounded-2xl transition-colors"
+                      >
+                        <item.icon className="w-8 h-8 text-gold mb-1" />
+                        <span className="text-[10px] font-medium text-white/90 leading-tight">
+                          {item.label}
+                        </span>
+                      </a>
                     </motion.div>
                   ))}
                 </div>
@@ -151,7 +142,7 @@ const About = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 px-4 bg-secondary/30">
+      <section id="our-values" className="py-20 px-4 bg-secondary/30 scroll-mt-24">
         <div className="container max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -194,7 +185,7 @@ const About = () => {
       </section>
 
       {/* Leadership Section */}
-      <section className="py-20 px-4 bg-background">
+      <section id="our-leadership" className="py-20 px-4 bg-background scroll-mt-24">
         <div className="container max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -224,6 +215,7 @@ const About = () => {
                   <img
                     src={emilyPhoto}
                     alt="Emily Moseni - CEO"
+                    loading="lazy"
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -261,6 +253,7 @@ const About = () => {
                   <img
                     src={ernestPhoto}
                     alt="Ernest Mambwe - COO"
+                    loading="lazy"
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -290,7 +283,7 @@ const About = () => {
       </section>
 
       {/* Why Choose EMIMOS Section */}
-      <section className="py-20 px-4 bg-secondary/30">
+      <section id="why-emimos" className="py-20 px-4 bg-secondary/30 scroll-mt-24">
         <div className="container max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -326,45 +319,38 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 gradient-navy relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-gold blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-primary blur-3xl" />
-        </div>
-
-        <div className="container max-w-4xl mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6">
-              Ready to work with a professional team you can trust?
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="btn-gold-glow bg-gold hover:bg-gold-light text-primary-foreground dark:text-navy-900 font-semibold px-8"
-              >
-                <Link to="/contact">
-                  Contact Us
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 font-semibold px-8"
-              >
-                <Link to="/services">
-                  Order a Service
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
+      <section className="py-20 px-4">
+        <div className="container max-w-4xl mx-auto">
+          <ImageHero
+            imageSrc={ernestPhoto}
+            imageAlt="Work with EMIMOS"
+            title="Ready to work with a professional team you can trust?"
+            subtitle="We are ready to support your next move with clear strategy and reliable delivery."
+            minHeightClass="min-h-[280px]"
+            actions={
+              <>
+                <Button
+                  asChild
+                  size="lg"
+                  className="btn-gold-glow bg-gold hover:bg-gold-light text-primary-foreground dark:text-navy-900 font-semibold px-8"
+                >
+                  <Link to="/contact">
+                    Contact Us
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-navy-900 hover:bg-white/90 border border-white/80 font-semibold px-8"
+                >
+                  <Link to="/services">
+                    Order a Service
+                  </Link>
+                </Button>
+              </>
+            }
+          />
         </div>
       </section>
     </AppLayout>

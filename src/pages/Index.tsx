@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircleHeart } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, MessageCircleHeart, Sparkles, UserCircle2, ClipboardList } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSlider from "@/components/home/HeroSlider";
 import QuickActions from "@/components/home/QuickActions";
+import WorkShowcase from "@/components/home/WorkShowcase";
 import { Button } from "@/components/ui/button";
+import ImageHero from "@/components/ui/ImageHero";
+import SectionDivider from "@/components/ui/SectionDivider";
+import PremiumCTA from "@/components/ui/PremiumCTA";
 import emimosLogo from "@/assets/emimos-logo.png";
+import emilyPhoto from "@/assets/emily-moseni.png";
+import ernestPhoto from "@/assets/ernest-moseni.png";
 
 const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check if splash was shown in this session
@@ -32,40 +39,45 @@ const Index = () => {
   return (
     <AppLayout>
       <div className="safe-top">
-        {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 pt-4 pb-6"
-        >
-          <div className="flex items-center gap-3">
-            <img 
-              src={emimosLogo} 
-              alt="EMIMOS Services" 
-              className="w-12 h-12 object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="text-lg font-heading font-bold text-foreground">
-                EMIMOS
-              </span>
-              <span className="text-xs text-primary font-medium">Services</span>
-            </div>
-          </div>
-        </motion.header>
-
-        {/* Welcome Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-4 mb-6"
+          className="px-4 pt-4 mb-6"
         >
-          <h1 className="text-2xl font-heading font-bold text-foreground">
-            Welcome to EMIMOS Services
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Everything your brand needs, in one place.
-          </p>
+          <ImageHero
+            imageSrc={emilyPhoto}
+            imageAlt="EMIMOS leadership"
+            title="Welcome to EMIMOS Services"
+            subtitle="Everything your brand needs, in one place. Strategy, design, technology, and delivery."
+            minHeightClass="min-h-[300px]"
+            badge={
+              <div className="flex items-center gap-3 mb-4">
+                <img
+                  src={emimosLogo}
+                  alt="EMIMOS Services"
+                  className="w-11 h-11 object-contain rounded-xl bg-white/90 p-1.5"
+                />
+                <div className="leading-tight">
+                  <p className="text-white font-heading font-bold">EMIMOS Services</p>
+                  <p className="text-white/80 text-xs">Professional Services. Done Right.</p>
+                </div>
+              </div>
+            }
+            actions={
+              <>
+                <Button asChild className="bg-gold hover:bg-gold-dark text-navy-900 font-semibold">
+                  <Link to="/services">
+                    Explore Services
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" className="border border-white/50 bg-white/10 text-white hover:bg-white/20">
+                  <Link to="/order?service=branding">Order Now</Link>
+                </Button>
+              </>
+            }
+          />
         </motion.section>
 
         <motion.section
@@ -124,7 +136,7 @@ const Index = () => {
           <QuickActions />
         </motion.section>
 
-        {/* Featured Services */}
+        {/* Guided Navigation */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -132,14 +144,34 @@ const Index = () => {
           className="px-4 mt-8"
         >
           <h2 className="text-lg font-heading font-semibold text-foreground mb-4">
-            Why Choose EMIMOS?
+            High-Value Next Steps
           </h2>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: "🎯", title: "Expert Team", desc: "Seasoned professionals" },
-              { icon: "⚡", title: "Fast Delivery", desc: "Quick turnaround" },
-              { icon: "💎", title: "Premium Quality", desc: "Excellence guaranteed" },
-              { icon: "🤝", title: "24/7 Support", desc: "Always available" },
+              {
+                icon: Sparkles,
+                title: "Map My Next Growth Move",
+                desc: "Step into a realistic growth path and see what your next strong move can look like.",
+                path: "/growth-playbook",
+              },
+              {
+                icon: MessageCircleHeart,
+                title: "Get Free Diagnosis",
+                desc: "Receive a quick business diagnosis and clear action path.",
+                path: "/emi",
+              },
+              {
+                icon: ClipboardList,
+                title: "Let Us Step Into Your Shoes",
+                desc: "Answer a smart questionnaire and get a tailored next-step plan.",
+                path: "/step-into-your-shoes",
+              },
+              {
+                icon: UserCircle2,
+                title: "Manage Your Profile",
+                desc: "Keep your details and order journey organized.",
+                path: "/profile",
+              },
             ].map((item, index) => (
               <motion.div
                 key={item.title}
@@ -148,12 +180,44 @@ const Index = () => {
                 transition={{ delay: 0.5 + index * 0.1 }}
                 className="bg-card p-4 rounded-2xl shadow-card border border-border"
               >
-                <span className="text-2xl">{item.icon}</span>
-                <h3 className="font-heading font-semibold text-foreground mt-2 text-sm">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-muted-foreground">{item.desc}</p>
+                <Link to={item.path} className="block">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-heading font-semibold text-foreground mt-2 text-sm">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                  <span className="inline-flex items-center text-xs font-medium text-primary mt-2">
+                    Open
+                    <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                  </span>
+                </Link>
               </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        <SectionDivider />
+        <WorkShowcase />
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="px-4 pb-2"
+        >
+          <h2 className="text-h3 text-foreground mb-3">Sectors Served</h2>
+          <div className="flex flex-wrap gap-2">
+            {["Corporate", "SMEs", "Retail", "NGOs", "Events", "Professional Services"].map((sector) => (
+              <button
+                key={sector}
+                type="button"
+                onClick={() => navigate(`/emi?sector=${encodeURIComponent(sector)}`)}
+                className="rounded-full border border-border bg-card/80 backdrop-blur-sm px-3 py-1 text-small text-foreground transition-colors hover:bg-muted"
+              >
+                {sector}
+              </button>
             ))}
           </div>
         </motion.section>
@@ -165,24 +229,30 @@ const Index = () => {
           transition={{ delay: 0.6 }}
           className="px-4 mt-8 pb-4"
         >
-          <div className="bg-gradient-to-r from-navy-700 to-navy-800 dark:from-navy-600 dark:to-navy-700 p-6 rounded-2xl text-center">
-            <h3 className="text-lg font-heading font-semibold text-white mb-2">
-              Want to know more about us?
-            </h3>
-            <p className="text-white/80 text-sm mb-4">
-              Meet the leadership and learn about our mission.
-            </p>
-            <Button
-              asChild
-              className="btn-gold-glow bg-gold hover:bg-gold-light text-navy-900 font-semibold"
-            >
-              <Link to="/about">
-                About EMIMOS
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
-          </div>
+          <ImageHero
+            imageSrc={ernestPhoto}
+            imageAlt="Learn more about EMIMOS"
+            title="Want to know more about us?"
+            subtitle="Meet the leadership and learn about our mission."
+            minHeightClass="min-h-[220px]"
+            actions={
+              <Button
+                asChild
+                className="btn-gold-glow bg-gold hover:bg-gold-light text-navy-900 font-semibold"
+              >
+                <Link to="/about">
+                  About EMIMOS
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            }
+          />
         </motion.section>
+
+        <PremiumCTA
+          title="Ready To Move Faster?"
+          subtitle="Book consultancy, start your order, or chat with Emi for guided next steps."
+        />
       </div>
     </AppLayout>
   );

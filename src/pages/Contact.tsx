@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Phone, MessageCircle, Mail, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/layout/AppLayout";
+import ImageHero from "@/components/ui/ImageHero";
+import PremiumCTA from "@/components/ui/PremiumCTA";
+import emilyPhoto from "@/assets/emily-moseni.png";
+import { IMAGE_FOCAL } from "@/lib/visuals";
 
 const Contact = () => {
   const contactMethods = [
@@ -26,8 +31,8 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email Support",
-      subtitle: "support@emimos.com",
-      action: () => window.open("mailto:support@emimos.com"),
+      subtitle: "Send us an email directly",
+      action: () => window.open("mailto:emilymoseni22@gmail.com"),
       color: "bg-primary/10 text-primary",
     },
   ];
@@ -35,36 +40,34 @@ const Contact = () => {
   return (
     <AppLayout>
       <div className="safe-top px-4 pt-4">
-        {/* Header */}
-        <motion.header
+        {/* Hero Section */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-heading font-bold text-foreground">
-            Contact & Support
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            We're here to help
-          </p>
-        </motion.header>
-
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-navy-600 to-navy-800 rounded-2xl p-6 mb-6 text-center"
-        >
-          <div className="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">👋</span>
-          </div>
-          <h2 className="text-xl font-heading font-bold text-primary-foreground">
-            How can we help?
-          </h2>
-          <p className="text-primary-foreground/70 mt-2">
-            Our support team is always ready to assist you
-          </p>
+          <ImageHero
+            imageSrc={emilyPhoto}
+            imageAlt="Contact EMIMOS"
+            title="Contact & Support"
+            subtitle="Our support team is ready to help you move forward quickly and clearly."
+            minHeightClass="min-h-[250px]"
+            imagePositionClass={IMAGE_FOCAL.heroPrimary}
+            actions={
+              <>
+                <Button asChild className="bg-gold hover:bg-gold-dark text-navy-900 font-semibold">
+                  <Link to="/emi">Ask Emi</Link>
+                </Button>
+                <Button
+                  onClick={() => window.open("tel:+260977759867")}
+                  variant="secondary"
+                  className="bg-white text-navy-900 hover:bg-white/90 border border-white/80"
+                >
+                  Call Us
+                </Button>
+              </>
+            }
+          />
         </motion.div>
 
         {/* Contact Methods */}
@@ -148,6 +151,10 @@ const Contact = () => {
           </p>
         </motion.div>
       </div>
+      <PremiumCTA
+        title="Need A Fast Strategic Response?"
+        subtitle="Book consultancy, start an order, or let Emi guide your next move."
+      />
     </AppLayout>
   );
 };
