@@ -68,6 +68,15 @@ export const useDownloadPrompt = () => {
     setDismissed();
   }, [setDismissed]);
 
+  const startAndroidApkDownload = useCallback(() => {
+    const link = document.createElement("a");
+    link.href = "/downloads/emimos-app.apk";
+    link.download = "emimos-app.apk";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }, []);
+
   const requestDownload = useCallback(async () => {
     if (isInstalling) return;
 
@@ -112,22 +121,39 @@ export const useDownloadPrompt = () => {
         return;
       }
 
+      if (isAndroid()) {
+        startAndroidApkDownload();
+        toast({
+          title: "Download started",
+          description: "EmiMos APK is downloading now. Open it to complete installation.",
+        });
+        return;
+      }
+
       toast({
-        title: isAndroid() ? "Install unavailable here" : "Install guidance",
-        description: isAndroid()
-          ? "Use your browser menu and tap Install app, or continue with the guide."
-          : "Open the install guide to add EmiMos to your device.",
+        title: "Install guidance",
+        description: "Open the install guide to add EmiMos to your device.",
       });
       window.location.href = "/download";
     } catch (error) {
       setIsInstalling(false);
+
+      if (isAndroid()) {
+        startAndroidApkDownload();
+        toast({
+          title: "Download started",
+          description: "EmiMos APK is downloading now. Open it to complete installation.",
+        });
+        return;
+      }
+
       toast({
         title: "Install unavailable",
         description: "Could not start the app install. Opening the install guide instead.",
       });
       window.location.href = "/download";
     }
-  }, [installPrompt, isInstalling, setDismissed]);
+  }, [installPrompt, isInstalling, setDismissed, startAndroidApkDownload]);
 
   return { shouldPrompt, dismiss, requestDownload, isInstalling };
 };

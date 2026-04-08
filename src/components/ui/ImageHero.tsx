@@ -29,7 +29,6 @@ const ImageHero = ({
         src={imageSrc}
         alt={imageAlt}
         loading="eager"
-        fetchPriority="high"
         decoding="sync"
         className={`absolute inset-0 w-full h-full object-cover ${imagePositionClass}`}
       />

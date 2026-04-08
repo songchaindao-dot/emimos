@@ -100,13 +100,17 @@ const GrowthPlaybook = () => {
           <h2 className="text-h3 text-foreground mb-3">What This Looks Like In Real Campaigns</h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {[poster1, poster2, poster3].map((image, index) => (
-              <img
+              <div
                 key={`growth-sample-${index}`}
-                src={image}
-                alt="EMIMOS campaign sample"
-                loading="lazy"
-                className="w-full h-52 object-cover rounded-2xl border border-border shadow-card"
-              />
+                className="h-52 w-full rounded-2xl border border-border shadow-card bg-card/70 flex items-center justify-center p-2"
+              >
+                <img
+                  src={image}
+                  alt="EMIMOS campaign sample"
+                  loading="lazy"
+                  className="h-full w-full object-contain"
+                />
+              </div>
             ))}
           </div>
         </motion.section>
