@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircleHeart } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import SplashScreen from "@/components/SplashScreen";
 import HeroSlider from "@/components/home/HeroSlider";
@@ -66,6 +66,43 @@ const Index = () => {
           <p className="text-muted-foreground mt-1">
             Everything your brand needs, in one place.
           </p>
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="px-4 mb-6"
+        >
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <div className="flex items-start gap-3">
+              <div className="h-11 w-11 rounded-2xl bg-gold/15 flex items-center justify-center shrink-0">
+                <MessageCircleHeart className="w-5 h-5 text-gold" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-base font-heading font-semibold text-foreground">
+                  Chat with Emi and find what you need
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Emi can guide you around the app, help you choose the right service, and offer one complimentary business diagnosis.
+                </p>
+                <div className="flex flex-wrap gap-3 mt-4">
+                  <Button
+                    asChild
+                    className="bg-gold hover:bg-gold-dark text-navy-900 font-semibold"
+                  >
+                    <Link to="/emi">
+                      Open Emi
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link to="/services">Browse Services</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.section>
 
         {/* Hero Slider */}

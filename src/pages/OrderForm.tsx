@@ -88,13 +88,6 @@ const OrderForm = () => {
       });
 
       const emailUrl = buildOrderEmailUrl(createdOrder);
-      const mailLink = document.createElement("a");
-      mailLink.href = emailUrl;
-      mailLink.rel = "noreferrer";
-      document.body.appendChild(mailLink);
-      mailLink.click();
-      document.body.removeChild(mailLink);
-
       navigate("/order-placed", {
         state: {
           serviceId,
@@ -105,6 +98,10 @@ const OrderForm = () => {
           emailNotification: "prepared",
         },
       });
+
+      setTimeout(() => {
+        window.location.href = emailUrl;
+      }, 120);
     }
   };
 
