@@ -207,14 +207,14 @@ const Index = () => {
           transition={{ delay: 0.55 }}
           className="px-4 pb-2"
         >
-          <h2 className="text-h3 text-foreground mb-3">Sectors Served</h2>
+          <h2 className="text-h3 text-foreground mb-3">What Fits You Best?</h2>
           <div className="flex flex-wrap gap-2">
             {["Corporate", "SMEs", "Retail", "NGOs", "Events", "Professional Services"].map((sector) => (
               <button
                 key={sector}
                 type="button"
                 onClick={() => navigate(`/emi?sector=${encodeURIComponent(sector)}`)}
-                className="rounded-full border border-border bg-card/80 backdrop-blur-sm px-3 py-1 text-small text-foreground transition-colors hover:bg-muted"
+                className="rounded-full border border-[#1f4ea3]/70 bg-[#1f4ea3] px-3.5 py-1.5 text-small font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-[#1f4ea3] hover:shadow-gold active:scale-[0.98]"
               >
                 {sector}
               </button>
